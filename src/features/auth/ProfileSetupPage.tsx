@@ -2,10 +2,13 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { apiClient } from '@/lib/api';
+import { getInitData } from '@/lib/telegram';
+import { useAuthStore } from '@/lib/store';
 import { haptic } from '@/lib/telegram';
 
 export default function ProfileSetupPage() {
   const navigate = useNavigate();
+  const setUser = useAuthStore((s) => s.setUser);
   const [fullName, setFullName] = useState('');
   const [stream, setStream] = useState<'natural' | 'social'>('natural');
   const [gender, setGender] = useState<'male' | 'female'>('male');
@@ -21,11 +24,16 @@ export default function ProfileSetupPage() {
     
     setIsLoading(true);
     try {
-      await apiClient.post('/telegram/auth/complete-profile', {
-        fullName,
-        stream,
+      const initData = getInitData();
+      const response = await apiClient.post('/telegram/auth/complete-profile', {
+        initData,
+        name: fullName,
+        streamId: stream,
         gender
       });
+      const { accessToken, refreshToken, user } = (response as any).data || response;
+      apiClient.setTokens(accessToken, refreshToken);
+      setUser(user);
       haptic('success');
       navigate('/');
     } catch (error) {

@@ -1,0 +1,151 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===== CSS Variables: Light Theme ===== */
+:root {
+  --surface: #FFFFFF;
+  --surface-low: #F1F5F9;
+  --surface-high: #F8FAFC;
+  --scaffold: #F8FAFC;
+  --outline: #E2E8F0;
+  --text-primary: #191B23;
+  --text-muted: #64748B;
+
+  /* Telegram theme variable overrides */
+  --tg-theme-bg-color: #F8FAFC;
+  --tg-theme-text-color: #191B23;
+  --tg-theme-hint-color: #64748B;
+  --tg-theme-link-color: #0D367A;
+  --tg-theme-button-color: #0D367A;
+  --tg-theme-button-text-color: #FFFFFF;
+}
+
+/* ===== CSS Variables: Dark Theme ===== */
+[data-theme='dark'] {
+  --surface: #101A2B;
+  --surface-low: #152238;
+  --surface-high: #24324A;
+  --scaffold: #08101F;
+  --outline: #31435D;
+  --text-primary: #F3F7FF;
+  --text-muted: #94A3B8;
+}
+
+/* ===== Base Styles ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: 'Poppins', system-ui, -apple-system, sans-serif;
+  background-color: var(--scaffold);
+  color: var(--text-primary);
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  overscroll-behavior-y: contain;
+}
+
+#root {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== Scrollbar Styling ===== */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--outline);
+  border-radius: 4px;
+}
+
+/* ===== Telegram WebApp Overrides ===== */
+body.telegram-webapp {
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ===== Selection ===== */
+::selection {
+  background-color: rgba(13, 54, 122, 0.15);
+  color: var(--text-primary);
+}
+
+/* ===== Input Autofill ===== */
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 30px var(--surface) inset !important;
+  -webkit-text-fill-color: var(--text-primary) !important;
+}
+
+/* ===== KaTeX Overrides ===== */
+.katex {
+  font-size: 1em !important;
+}
+
+.katex-display {
+  margin: 0.5em 0 !important;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+/* ===== Utility Classes ===== */
+@layer utilities {
+  .safe-bottom {
+    padding-bottom: max(env(safe-area-inset-bottom, 0px), 16px);
+  }
+
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* ===== Page Transition ===== */
+.page-enter {
+  opacity: 0;
+  transform: translateX(20px);
+}
+
+.page-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 200ms ease-out, transform 200ms ease-out;
+}
+
+.page-exit {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.page-exit-active {
+  opacity: 0;
+  transform: translateX(-20px);
+  transition: opacity 150ms ease-in, transform 150ms ease-in;
+}

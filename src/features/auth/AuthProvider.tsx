@@ -53,8 +53,12 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
             navigate('/onboarding');
           }
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error('Auth error', error);
+        // Alert the error so we can debug it
+        import('@/lib/telegram').then(({ showAlert }) => {
+           showAlert('Auth Error: ' + (error?.message || JSON.stringify(error)));
+        });
         navigate('/onboarding');
       } finally {
         setLoading(false);

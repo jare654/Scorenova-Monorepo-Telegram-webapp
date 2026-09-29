@@ -5,7 +5,7 @@ export const useProfile = () => {
   return useQuery({
     queryKey: ['profile'],
     queryFn: async () => {
-      const { data } = await apiClient.get('/accounts/me');
+      const data = await apiClient.get('/accounts/me');
       return data;
     }
   });

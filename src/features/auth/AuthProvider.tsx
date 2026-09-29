@@ -7,19 +7,19 @@ import { isTelegramEnvironment, getTelegramWebApp, cloudStorage } from '@/lib/te
 export default function AuthProvider({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
   const setUser = useAuthStore((state) => state.setUser);
-  const setIsLoading = useAuthStore((state) => state.setIsLoading);
+  const setLoading = useAuthStore((state) => state.setLoading);
 
   useEffect(() => {
     const authenticate = async () => {
-      setIsLoading(true);
+      setLoading(true);
       try {
         if (isTelegramEnvironment()) {
           const webApp = getTelegramWebApp();
-          const initData = webApp.initData;
+          const initData = webApp?.initData;
           
           if (initData) {
             const response = await apiClient.post('/telegram/auth', { initData });
-            const { accessToken, refreshToken, user, status } = response.data;
+            const { accessToken, refreshToken, user, status } = (response as any).data || response;
             
             apiClient.setTokens(accessToken, refreshToken);
             setUser(user);
@@ -47,7 +47,7 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
           if (access) {
             apiClient.setTokens(access, refresh || '');
             const response = await apiClient.get('/auth/get-user-info');
-            setUser(response.data);
+            setUser((response as any).data || response);
           } else {
             navigate('/onboarding');
           }
@@ -56,7 +56,7 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
         console.error('Auth error', error);
         navigate('/onboarding');
       } finally {
-        setIsLoading(false);
+        setLoading(false);
       }
     };
 
@@ -85,14 +85,14 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
       navigate('/onboarding');
     };
 
-    window.addEventListener('auth:token-refreshed', handleTokenRefreshed as EventListener);
+    window.addEventListener('auth:token-refreshed', handleTokenRefreshed as unknown as EventListener);
     window.addEventListener('auth:logout', handleLogout as EventListener);
 
     return () => {
-      window.removeEventListener('auth:token-refreshed', handleTokenRefreshed as EventListener);
+      window.removeEventListener('auth:token-refreshed', handleTokenRefreshed as unknown as EventListener);
       window.removeEventListener('auth:logout', handleLogout as EventListener);
     };
-  }, [navigate, setUser, setIsLoading]);
+  }, [navigate, setUser, setLoading]);
 
   return <>{children}</>;
 }

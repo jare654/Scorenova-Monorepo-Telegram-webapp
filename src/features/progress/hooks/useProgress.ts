@@ -5,7 +5,7 @@ export const useProgress = () => {
   return useQuery({
     queryKey: ['progress'],
     queryFn: async () => {
-      const { data } = await apiClient.get('/progress/me');
+      const data = await apiClient.get('/progress/me');
       return data;
     }
   });

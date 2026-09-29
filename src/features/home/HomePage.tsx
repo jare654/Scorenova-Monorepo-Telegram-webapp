@@ -14,7 +14,7 @@ export default function HomePage() {
     queryKey: ['progress', 'me'],
     queryFn: async () => {
       const response = await apiClient.get('/progress/me');
-      return response.data;
+      return (response as any).data || response;
     },
   });
 

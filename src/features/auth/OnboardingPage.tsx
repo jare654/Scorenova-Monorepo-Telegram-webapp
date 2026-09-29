@@ -58,13 +58,13 @@ export default function OnboardingPage() {
             <div
               className={cn(
                 'w-48 h-48 rounded-full flex items-center justify-center text-8xl mb-8',
-                slides[currentIndex].color
+                slides[currentIndex]?.color
               )}
             >
-              {slides[currentIndex].emoji}
+              {slides[currentIndex]?.emoji}
             </div>
             <h1 className="text-2xl font-bold mb-4 max-w-sm">
-              {slides[currentIndex].title}
+              {slides[currentIndex]?.title}
             </h1>
           </motion.div>
         </AnimatePresence>

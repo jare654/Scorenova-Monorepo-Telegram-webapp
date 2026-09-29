@@ -66,7 +66,7 @@ export function useMockSubjects(stream?: string) {
     queryKey: ['mock-subjects', stream],
     queryFn: async () => {
       const params = stream ? { stream } : {};
-      const { data } = await apiClient.get<MockSubject[]>('/mocks/subjects', { params });
+      const data = await apiClient.get<MockSubject[]>('/mocks/subjects', { params });
       return data;
     },
   });
@@ -76,7 +76,7 @@ export function useMockExams(subjectId: string) {
   return useQuery({
     queryKey: ['mock-exams', subjectId],
     queryFn: async () => {
-      const { data } = await apiClient.get<MockExam[]>(`/mocks/subject/${subjectId}`);
+      const data = await apiClient.get<MockExam[]>(`/mocks/subject/${subjectId}`);
       return data;
     },
     enabled: !!subjectId,
@@ -87,7 +87,7 @@ export function useStartExam(examId: string) {
   return useQuery({
     queryKey: ['start-exam', examId],
     queryFn: async () => {
-      const { data } = await apiClient.get<ExamSession>(`/mocks/${examId}/start`);
+      const data = await apiClient.get<ExamSession>(`/mocks/${examId}/start`);
       return data;
     },
     enabled: !!examId,
@@ -99,7 +99,7 @@ export function useSubmitExam() {
   
   return useMutation({
     mutationFn: async ({ sessionId, answers }: ExamSubmission) => {
-      const { data } = await apiClient.post<ExamResult>(`/mocks/${sessionId}/submit`, { answers });
+      const data = await apiClient.post<ExamResult>(`/mocks/${sessionId}/submit`, { answers });
       return data;
     },
     onSuccess: () => {
@@ -112,7 +112,7 @@ export function useMyResults() {
   return useQuery({
     queryKey: ['my-results'],
     queryFn: async () => {
-      const { data } = await apiClient.get<ExamResult[]>('/mocks/my-results');
+      const data = await apiClient.get<ExamResult[]>('/mocks/my-results');
       return data;
     },
   });

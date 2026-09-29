@@ -11,7 +11,7 @@ import { cn } from '@/lib/utils';
 export default function ExamTakingPage() {
   const { examId } = useParams<{ examId: string }>();
   const navigate = useNavigate();
-  const setNavVisible = useNavStore((state) => state.setIsNavVisible);
+  const setNavVisible = useNavStore((state) => state.setNavVisible);
   
   const { data: session, isLoading } = useStartExam(examId || '');
   const { mutate: submitExam, isPending: isSubmitting } = useSubmitExam();
@@ -53,7 +53,7 @@ export default function ExamTakingPage() {
 
   const handleSubmit = () => {
     if (!session) return;
-    showConfirm('Are you sure you want to submit your exam?', (ok) => {
+    showConfirm('Are you sure you want to submit your exam?').then((ok) => {
       if (ok) {
         submitExam({ sessionId: session.sessionId, answers }, {
           onSuccess: (result) => {
@@ -79,6 +79,7 @@ export default function ExamTakingPage() {
   if (isLoading || !session) return <div>Loading exam...</div>;
 
   const currentQ = session.questions[currentIndex];
+  if (!currentQ) return null;
 
   return (
     <div className="min-h-screen bg-gray-50 font-poppins flex flex-col">
@@ -127,7 +128,7 @@ export default function ExamTakingPage() {
         </div>
 
         <div className="space-y-3">
-          {currentQ.options.map(opt => (
+          {currentQ.options.map((opt: any) => (
             <button
               key={opt.id}
               onClick={() => setAnswers(p => ({ ...p, [currentQ.id]: opt.id }))}

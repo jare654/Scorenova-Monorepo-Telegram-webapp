@@ -24,7 +24,7 @@ export const useScanQuestion = () => {
           'Content-Type': 'multipart/form-data',
         },
       });
-      return response.data;
+      return (response as any).data || response;
     },
     onSuccess: () => {
       haptic('success');

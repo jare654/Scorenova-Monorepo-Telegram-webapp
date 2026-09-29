@@ -47,8 +47,8 @@ export default function ScanResultPage() {
     haptic('light');
     const text = `Q: ${result.question}\n\nA: ${result.answer}`;
     // Use Telegram Web App's share feature if available, else fallback
-    if (window.Telegram?.WebApp?.switchInlineQuery) {
-      window.Telegram.WebApp.switchInlineQuery(text, ['users', 'groups']);
+    if (window.Telegram?.WebApp?.openTelegramLink) {
+      window.Telegram.WebApp.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(text)}`);
     } else {
       navigator.clipboard.writeText(text);
       alert('Copied to clipboard!');

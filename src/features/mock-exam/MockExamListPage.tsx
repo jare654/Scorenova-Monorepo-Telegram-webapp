@@ -21,7 +21,7 @@ export default function MockExamListPage() {
         {isLoading ? (
           <div>Loading...</div>
         ) : (
-          exams?.map((exam) => (
+          exams?.map((exam: any) => (
             <div key={exam.id} className="bg-white rounded-[20px] p-5 shadow-sm border border-gray-100">
               <div className="flex justify-between items-start mb-4">
                 <h3 className="font-bold text-[#0F172A] text-lg">{exam.title}</h3>

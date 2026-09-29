@@ -10,8 +10,8 @@ export function AppShell() {
   useEffect(() => {
     if (isTelegramEnvironment()) {
       const tg = getTelegramWebApp()
-      if(tg.ready) tg.ready()
-      if(tg.expand) tg.expand()
+      if(tg?.ready) tg.ready()
+      if(tg?.expand) tg.expand()
     }
   }, [])
 

@@ -16,15 +16,15 @@ export function AppBar({ title, showBack, rightActions }: AppBarProps) {
     if (isTelegramEnvironment()) {
       const tg = getTelegramWebApp()
       if (showBack) {
-        if(tg.BackButton) {
-          tg.BackButton.show()
-          tg.BackButton.onClick(() => navigate(-1))
+        if(tg?.BackButton) {
+          tg?.BackButton.show()
+          tg?.BackButton.onClick(() => navigate(-1))
         }
       } else {
-        if(tg.BackButton) tg.BackButton.hide()
+        if(tg?.BackButton) tg?.BackButton.hide()
       }
       return () => {
-        if(showBack && tg.BackButton) tg.BackButton.offClick(() => navigate(-1))
+        if(showBack && tg?.BackButton) tg?.BackButton.offClick(() => navigate(-1))
       }
     }
   }, [showBack, navigate])

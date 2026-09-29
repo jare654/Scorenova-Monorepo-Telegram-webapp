@@ -8,7 +8,7 @@ import { motion } from 'framer-motion';
 export default function MockExamPage() {
   const user = useAuthStore((state) => state.user);
   const navigate = useNavigate();
-  const { data: subjects, isLoading } = useMockSubjects(user?.stream);
+  const { data: subjects, isLoading } = useMockSubjects(user?.stream_id);
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] pb-24 font-poppins">
@@ -26,7 +26,7 @@ export default function MockExamPage() {
           </div>
         ) : (
           <div className="space-y-4">
-            {subjects?.map((subject) => (
+            {subjects?.map((subject: any) => (
               <motion.div
                 key={subject.id}
                 whileTap={{ scale: 0.98 }}

@@ -9,7 +9,7 @@ import { haptic, showAlert, showConfirm } from '@/lib/telegram';
 export default function ProfilePage() {
   const navigate = useNavigate();
   const { user, logout } = useAuthStore();
-  const isPremium = user?.isPremium || false;
+  const isPremium = user?.is_premium || false;
 
   const handleLogout = async () => {
     haptic('medium');
@@ -39,11 +39,11 @@ export default function ProfilePage() {
       <div className="bg-[#0D367A] pt-12 pb-6 px-4 rounded-b-[30px] text-white">
         <div className="flex items-center space-x-4">
           <div className="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center text-xl font-bold">
-            {user?.firstName?.charAt(0) || 'U'}
+            {(user?.name?.split(" ")[0] || "")?.charAt(0) || 'U'}
           </div>
           <div className="flex-1">
-            <h1 className="text-xl font-bold">{user?.firstName} {user?.lastName}</h1>
-            <p className="text-white/80 text-sm">{user?.stream || 'Natural Science'}</p>
+            <h1 className="text-xl font-bold">{(user?.name?.split(" ")[0] || "")} {(user?.name?.split(" ").slice(1).join(" ") || "")}</h1>
+            <p className="text-white/80 text-sm">{user?.stream?.name || user?.stream_id || 'Natural Science'}</p>
             <div className={cn("mt-1 text-xs px-2 py-1 rounded-full inline-block font-semibold", isPremium ? "bg-[#FFD000] text-[#0D367A]" : "bg-gray-400 text-white")}>
               {isPremium ? 'Premium Member' : 'Free Plan'}
             </div>

@@ -15,7 +15,7 @@ export default function GreetingHeader() {
     return 'Good evening';
   };
 
-  const firstName = user?.firstName || 'Student';
+  const firstName = (user?.name?.split(" ")[0] || "") || 'Student';
   const initials = firstName.charAt(0).toUpperCase();
 
   const handleNotificationClick = () => {
@@ -27,8 +27,8 @@ export default function GreetingHeader() {
     <div className="flex items-center justify-between mb-6">
       <div className="flex items-center gap-3">
         <div className="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xl overflow-hidden shadow-sm">
-          {user?.photoUrl ? (
-            <img src={user.photoUrl} alt={firstName} className="w-full h-full object-cover" />
+          {user?.telegram_photo_url ? (
+            <img src={user?.telegram_photo_url} alt={firstName} className="w-full h-full object-cover" />
           ) : (
             initials
           )}
@@ -37,9 +37,9 @@ export default function GreetingHeader() {
           <p className="text-slate-500 dark:text-slate-400 text-sm">{getGreeting()},</p>
           <div className="flex items-center gap-2">
             <h2 className="text-lg font-bold text-slate-900 dark:text-white">{firstName}</h2>
-            {user?.streak && user.streak > 0 && (
+            {(user as any).streak || 0 && (user as any).streak || 0 > 0 && (
               <span className="bg-[#FFD000]/20 text-[#FFC107] text-xs font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
-                🔥 {user.streak}
+                🔥 {(user as any).streak || 0}
               </span>
             )}
           </div>

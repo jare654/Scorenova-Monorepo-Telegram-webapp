@@ -8,7 +8,7 @@ export function useSubjects(stream?: string) {
       const response = await apiClient.get('/practice/subjects', {
         params: { stream },
       });
-      return response.data;
+      return (response as any).data || response;
     },
     enabled: !!stream,
   });
@@ -19,7 +19,7 @@ export function useTopics(subjectId: string) {
     queryKey: ['practice-topics', subjectId],
     queryFn: async () => {
       const response = await apiClient.get(`/practice/subjects/${subjectId}/topics`);
-      return response.data;
+      return (response as any).data || response;
     },
     enabled: !!subjectId,
   });
@@ -30,7 +30,7 @@ export function useQuestions(topicId: string) {
     queryKey: ['practice-questions', topicId],
     queryFn: async () => {
       const response = await apiClient.get(`/practice/topics/${topicId}/questions`);
-      return response.data;
+      return (response as any).data || response;
     },
     enabled: !!topicId,
   });
@@ -40,7 +40,7 @@ export function useAiExplain() {
   return useMutation({
     mutationFn: async (questionId: string) => {
       const response = await apiClient.post('/ai/explain', { questionId });
-      return response.data;
+      return (response as any).data || response;
     },
   });
 }
@@ -50,10 +50,10 @@ export function useBookmark() {
     mutationFn: async ({ id, isBookmarked }: { id: string; isBookmarked: boolean }) => {
       if (isBookmarked) {
         const response = await apiClient.delete(`/questions/${id}/save`);
-        return response.data;
+        return (response as any).data || response;
       } else {
         const response = await apiClient.post(`/questions/${id}/save`);
-        return response.data;
+        return (response as any).data || response;
       }
     },
   });
@@ -63,7 +63,7 @@ export function useFlagQuestion() {
   return useMutation({
     mutationFn: async ({ id, reason }: { id: string; reason: string }) => {
       const response = await apiClient.post(`/questions/${id}/flag`, { reason });
-      return response.data;
+      return (response as any).data || response;
     },
   });
 }
@@ -72,7 +72,7 @@ export function useSubmitAttempt() {
   return useMutation({
     mutationFn: async (attemptData: any) => {
       const response = await apiClient.post('/attempts/sessions', attemptData);
-      return response.data;
+      return (response as any).data || response;
     },
   });
 }

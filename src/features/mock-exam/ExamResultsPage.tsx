@@ -11,7 +11,7 @@ export default function ExamResultsPage() {
   const { sessionId } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
-  const setNavVisible = useNavStore((state) => state.setIsNavVisible);
+  const setNavVisible = useNavStore((state) => state.setNavVisible);
 
   const result = location.state?.result as ExamResult;
 

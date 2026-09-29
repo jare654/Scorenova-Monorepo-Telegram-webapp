@@ -6,6 +6,7 @@ interface ApiOptions {
   headers?: Record<string, string>;
   timeout?: number;
   signal?: AbortSignal;
+  params?: Record<string, string | undefined>;
 }
 
 interface ApiError {
@@ -81,7 +82,7 @@ class ApiClient {
   }
 
   async request<T>(endpoint: string, options: ApiOptions = {}): Promise<T> {
-    const { method = 'GET', body, headers = {}, timeout = 45000, signal } = options;
+    const { method = 'GET', body, headers = {}, timeout = 45000, signal, params } = options;
 
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), timeout);
@@ -97,7 +98,8 @@ class ApiClient {
     }
 
     try {
-      let response = await fetch(`${API_BASE_URL}${endpoint}`, {
+      const queryString = params ? "?" + new URLSearchParams(Object.entries(params || {}).filter(([_, v]) => v !== undefined) as string[][]).toString() : "";
+      let response = await fetch(`${API_BASE_URL}${endpoint}${queryString}`, {
         method,
         headers: requestHeaders,
         body: body ? JSON.stringify(body) : undefined,
@@ -109,7 +111,7 @@ class ApiClient {
         const refreshed = await this.refreshAccessToken();
         if (refreshed) {
           requestHeaders['Authorization'] = `Bearer ${this.accessToken}`;
-          response = await fetch(`${API_BASE_URL}${endpoint}`, {
+          response = await fetch(`${API_BASE_URL}${endpoint}${queryString}`, {
             method,
             headers: requestHeaders,
             body: body ? JSON.stringify(body) : undefined,

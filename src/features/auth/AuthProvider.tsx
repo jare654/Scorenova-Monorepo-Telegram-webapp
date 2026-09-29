@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import LoadingScreen from '@/components/shared/LoadingScreen';
+import { LoadingScreen } from '@/components/shared/LoadingScreen';
 import { apiClient } from '@/lib/api';
 import { useAuthStore } from '@/lib/store';
 import { isTelegramEnvironment, getTelegramWebApp, cloudStorage } from '@/lib/telegram';

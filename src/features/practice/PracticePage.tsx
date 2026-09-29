@@ -5,8 +5,7 @@ import { SubjectCard } from './components/SubjectCard';
 
 export default function PracticePage() {
   const navigate = useNavigate();
-  // We don't necessarily need to pass stream if backend infers it from token now
-  const { data: subjects, isLoading } = useSubjects();
+  const { data: subjects, isLoading, error } = useSubjects();
 
   return (
     <div className="flex flex-col min-h-screen bg-white font-poppins pb-[100px]">
@@ -42,7 +41,12 @@ export default function PracticePage() {
               <div key={i} className="h-[82px] rounded-[20px] bg-gray-100 animate-pulse" />
             ))}
           </div>
-        ) : subjects?.length === 0 ? (
+        ) : error ? (
+          <div className="flex flex-col items-center justify-center pt-20">
+            <p className="text-red-500 font-bold mb-2">Error loading subjects</p>
+            <p className="text-[#64748B] text-[12px] text-center max-w-[250px]">{String(error)}</p>
+          </div>
+        ) : !subjects || subjects.length === 0 ? (
           <div className="flex flex-col items-center justify-center pt-20">
             <p className="text-[#64748B] text-[16px]">No subjects found.</p>
           </div>

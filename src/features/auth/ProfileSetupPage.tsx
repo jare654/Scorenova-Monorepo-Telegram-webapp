@@ -10,6 +10,7 @@ export default function ProfileSetupPage() {
   const navigate = useNavigate();
   const setUser = useAuthStore((s) => s.setUser);
   const [fullName, setFullName] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [stream, setStream] = useState<'natural' | 'social'>('natural');
   const [gender, setGender] = useState<'male' | 'female'>('male');
   const [acceptedTerms, setAcceptedTerms] = useState(false);
@@ -28,6 +29,7 @@ export default function ProfileSetupPage() {
       const response = await apiClient.post('/telegram/auth/complete-profile', {
         initData,
         name: fullName,
+        phoneNumber,
         streamId: stream,
         gender
       });
@@ -68,6 +70,18 @@ export default function ProfileSetupPage() {
             onChange={(e) => setFullName(e.target.value)}
             className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-[20px] px-4 py-4 outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
             placeholder="Enter your full name"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-semibold mb-2">Phone Number</label>
+          <input
+            type="tel"
+            required
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
+            className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-[20px] px-4 py-4 outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+            placeholder="e.g. +251911234567"
           />
         </div>
 
@@ -131,7 +145,7 @@ export default function ProfileSetupPage() {
         <div className="mt-auto pt-6 flex flex-col gap-4">
           <button
             type="submit"
-            disabled={!acceptedTerms || isLoading || !fullName.trim()}
+            disabled={!acceptedTerms || isLoading || !fullName.trim() || !phoneNumber.trim()}
             className="w-full h-[58px] bg-primary text-white rounded-[20px] font-semibold text-lg shadow-[0_2px_8px_rgba(0,26,66,0.08)] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
           >
             {isLoading ? 'Loading...' : 'Create Account'}

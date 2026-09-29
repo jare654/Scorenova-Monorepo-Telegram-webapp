@@ -36,8 +36,11 @@ export default function ProfileSetupPage() {
       setUser(user);
       haptic('success');
       navigate('/');
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
+      import('@/lib/telegram').then(({ showAlert }) => {
+         showAlert('Setup Error: ' + (error?.message || JSON.stringify(error)));
+      });
       haptic('error');
     } finally {
       setIsLoading(false);

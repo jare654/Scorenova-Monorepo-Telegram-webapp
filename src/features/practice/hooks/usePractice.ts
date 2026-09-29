@@ -5,12 +5,12 @@ export function useSubjects(stream?: string) {
   return useQuery({
     queryKey: ['practice-subjects', stream],
     queryFn: async () => {
-      const response = await apiClient.get('/practice/subjects', {
-        params: { stream },
-      });
+      // Backend handles stream inference via JWT if stream param is omitted
+      const params = stream ? { stream } : undefined;
+      const response = await apiClient.get('/practice/subjects', { params });
       return (response as any).data || response;
     },
-    enabled: !!stream,
+    enabled: true, // Always fetch, backend infers stream from user
   });
 }
 

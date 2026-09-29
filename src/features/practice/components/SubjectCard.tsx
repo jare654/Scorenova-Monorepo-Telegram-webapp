@@ -1,58 +1,52 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-import { cn } from '@/lib/utils';
-import { Lock } from 'lucide-react';
+import { ChevronRight, Lock } from 'lucide-react';
 
 interface SubjectCardProps {
   id: string;
-  name: string;
-  emoji: string;
-  topicCount: number;
-  questionCount: number;
-  isPremium: boolean;
-  onClick: () => void;
+  title: string;
+  topicsCount: number;
+  isLocked?: boolean;
+  onTap: () => void;
+  onLockedTap?: () => void;
 }
 
-export function SubjectCard({
-  name,
-  emoji,
-  topicCount,
-  questionCount,
-  isPremium,
-  onClick,
-}: SubjectCardProps) {
+const getSubjectIconUrl = (title: string) => {
+  const t = title.toLowerCase();
+  if (t.includes('aptitude')) return 'https://api.iconify.design/material-symbols:assignment-ind-rounded.svg?color=white';
+  if (t.includes('biology')) return 'https://api.iconify.design/material-symbols:insights-rounded.svg?color=white';
+  if (t.includes('chemistry')) return 'https://api.iconify.design/material-symbols:science-rounded.svg?color=white';
+  if (t.includes('math')) return 'https://api.iconify.design/material-symbols:calculate-rounded.svg?color=white';
+  if (t.includes('english')) return 'https://api.iconify.design/material-symbols:menu-book-rounded.svg?color=white';
+  if (t.includes('physics')) return 'https://api.iconify.design/material-symbols:biotech-rounded.svg?color=white';
+  if (t.includes('civics')) return 'https://api.iconify.design/material-symbols:account-balance-rounded.svg?color=white';
+  if (t.includes('geography')) return 'https://api.iconify.design/material-symbols:public-rounded.svg?color=white';
+  if (t.includes('history')) return 'https://api.iconify.design/material-symbols:auto-stories-rounded.svg?color=white';
+  return 'https://api.iconify.design/material-symbols:menu-book-rounded.svg?color=white';
+};
+
+export function SubjectCard({ id, title, topicsCount, isLocked = false, onTap, onLockedTap }: SubjectCardProps) {
+  const iconUrl = getSubjectIconUrl(title);
+  const topicText = `${topicsCount} ${topicsCount === 1 ? 'Topic' : 'Topics'}`;
+
   return (
-    <motion.button
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
-      onClick={onClick}
-      className={cn(
-        'relative flex w-full flex-col items-start rounded-[20px] bg-white p-4 text-left shadow-[0_2px_8px_rgba(0,26,66,0.08)] transition-colors dark:bg-[#08101F]',
-        'focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0D367A]'
-      )}
+    <button
+      onClick={isLocked ? onLockedTap : onTap}
+      className="w-full mb-3 bg-white rounded-[20px] border-[1.2px] border-[#D7DEE8] shadow-[0_8px_16px_rgba(0,0,0,0.045)] text-left flex items-center p-3.5 transition-all active:scale-[0.98]"
     >
-      <div className="mb-3 flex w-full items-start justify-between">
-        <span className="text-3xl">{emoji}</span>
-        <div className="flex gap-2">
-          {isPremium ? (
-            <span className="flex items-center gap-1 rounded-full bg-[#FFD000]/10 px-2 py-1 text-xs font-semibold text-[#FFC107]">
-              <Lock className="h-3 w-3" />
-              PRO
-            </span>
-          ) : (
-            <span className="rounded-full bg-[#3CCF91]/10 px-2 py-1 text-xs font-semibold text-[#3CCF91]">
-              FREE
-            </span>
-          )}
-        </div>
+      <div className="w-[52px] h-[52px] bg-[#0D367A] rounded-[14px] flex items-center justify-center shrink-0">
+        <img src={iconUrl} alt={title} className="w-[26px] h-[26px]" />
       </div>
-      
-      <h3 className="mb-1 text-lg font-bold text-[#0D367A] dark:text-white">
-        {name}
-      </h3>
-      <p className="text-sm text-gray-500 dark:text-gray-400">
-        {topicCount} Topics • {questionCount} Questions
-      </p>
-    </motion.button>
+      <div className="ml-3.5 flex-1 overflow-hidden">
+        <h3 className="text-[16px] font-bold text-[#0F172A] truncate">{title}</h3>
+        <p className="text-[12px] text-[#64748B] mt-1">{topicText}</p>
+      </div>
+      <div className="ml-2.5 shrink-0">
+        {isLocked ? (
+          <Lock size={20} color="#94A3B8" />
+        ) : (
+          <ChevronRight size={26} color="#E2E8F0" />
+        )}
+      </div>
+    </button>
   );
 }

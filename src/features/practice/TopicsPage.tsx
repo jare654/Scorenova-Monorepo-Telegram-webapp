@@ -1,100 +1,103 @@
-import React, { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { ChevronLeft } from 'lucide-react';
+import React from 'react';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { ArrowLeft, Lock } from 'lucide-react';
 import { useTopics } from './hooks/usePractice';
-import { TopicCard } from './components/TopicCard';
 
-// Dummy store imports
-// import { usePremiumStore } from '@/lib/store';
+const getTopicIconUrl = (title: string) => {
+  const t = title.toLowerCase();
+  if (t.includes('biology')) return 'https://api.iconify.design/mdi:dna.svg?color=white';
+  if (t.includes('math') || t.includes('aptitude')) return 'https://api.iconify.design/mdi:calculator.svg?color=white';
+  if (t.includes('science') || t.includes('physics') || t.includes('chemistry')) return 'https://api.iconify.design/mdi:flask.svg?color=white';
+  return 'https://api.iconify.design/mdi:book-open-variant.svg?color=white';
+};
 
 export default function TopicsPage() {
-  const { subjectId } = useParams<{ subjectId: string }>();
+  const { subjectId } = useParams();
   const navigate = useNavigate();
-  // const isPremiumUser = usePremiumStore(state => state.isPremium);
-  const isPremiumUser = false; // Placeholder
-  const [showPremiumGate, setShowPremiumGate] = useState(false);
-
-  const { data: topics, isLoading, error } = useTopics(subjectId || '');
-
-  if (isLoading) {
-    return (
-      <div className="flex h-screen flex-col bg-[#F8FAFC] dark:bg-[#08101F]">
-        <div className="flex items-center p-4">
-          <div className="h-8 w-8 rounded-full bg-gray-200 animate-pulse dark:bg-gray-800" />
-          <div className="ml-4 h-6 w-32 rounded bg-gray-200 animate-pulse dark:bg-gray-800" />
-        </div>
-        <div className="p-4">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="mb-4 h-24 rounded-[20px] bg-gray-200 animate-pulse dark:bg-gray-800" />
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return <div className="p-4 text-red-500">Failed to load topics.</div>;
-  }
+  // Pass subject name somehow, maybe from location state, or just fetch it
+  // For now, if we don't have it, we just display 'Subject'
+  
+  const { data: topics, isLoading } = useTopics(subjectId!);
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#F8FAFC] dark:bg-[#08101F] pb-24">
-      <div className="sticky top-0 z-10 flex items-center bg-[#F8FAFC]/80 px-4 py-4 backdrop-blur-md dark:bg-[#08101F]/80">
+    <div className="flex flex-col min-h-screen bg-[#0B3175] font-poppins">
+      {/* HEADER */}
+      <div className="w-full pt-[48px] pb-[20px]">
         <button 
           onClick={() => navigate(-1)}
-          className="rounded-full p-2 hover:bg-gray-200 dark:hover:bg-gray-800"
+          className="ml-2 p-2"
         >
-          <ChevronLeft className="h-6 w-6 text-[#0D367A] dark:text-white" />
+          <ArrowLeft size={28} color="white" />
         </button>
-        <h1 className="ml-2 text-xl font-bold text-[#0D367A] dark:text-white">Topics</h1>
-      </div>
-
-      <div className="p-4">
-        {topics?.map((topic: any) => {
-          const isLocked = topic.isPremium && !isPremiumUser;
-          
-          return (
-            <TopicCard
-              key={topic.id}
-              id={topic.id}
-              name={topic.name}
-              duration={topic.duration || '15 min'}
-              questionCount={topic.questionCount || 0}
-              progress={topic.progress || 0}
-              isPremium={topic.isPremium || false}
-              isLocked={isLocked}
-              onClick={() => {
-                if (isLocked) {
-                  setShowPremiumGate(true);
-                } else {
-                  navigate(`/practice/${topic.id}/questions`);
-                }
-              }}
-            />
-          );
-        })}
-      </div>
-
-      {showPremiumGate && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="w-full max-w-sm rounded-[20px] bg-white p-6 shadow-xl dark:bg-[#08101F]">
-            <h2 className="mb-2 text-xl font-bold text-[#0D367A] dark:text-white">Premium Content</h2>
-            <p className="mb-6 text-gray-500 dark:text-gray-400">Upgrade to Premium to access this topic and much more.</p>
-            <div className="flex gap-4">
-              <button 
-                onClick={() => setShowPremiumGate(false)}
-                className="flex-1 rounded-full bg-gray-200 py-3 font-semibold text-gray-700 dark:bg-gray-800 dark:text-gray-300"
-              >
-                Cancel
-              </button>
-              <button 
-                className="flex-1 rounded-full bg-[#FFD000] py-3 font-semibold text-[#0D367A]"
-              >
-                Upgrade
-              </button>
-            </div>
-          </div>
+        <div className="px-6 mt-3">
+          <h1 className="text-white text-[34px] font-extrabold tracking-[-0.5px]">
+            Topics
+          </h1>
+          <div className="h-2.5" />
+          <p className="text-white/70 text-[16px] font-medium leading-[1.3]">
+            Choose a topic to<br/>start practicing
+          </p>
         </div>
-      )}
+      </div>
+
+      {/* CONTENT ROUNDED CONTAINER */}
+      <div className="flex-1 bg-white rounded-t-[32px] w-full px-5 pt-8 pb-10">
+        {isLoading ? (
+          <div className="flex flex-col space-y-4">
+            {[1, 2, 3, 4].map(i => (
+              <div key={i} className="h-[74px] bg-gray-100 animate-pulse rounded-[16px]" />
+            ))}
+          </div>
+        ) : topics?.length === 0 ? (
+          <div className="flex flex-col items-center justify-center pt-20">
+            <p className="text-[#64748B] text-[16px]">No topics found.</p>
+          </div>
+        ) : (
+          <div className="flex flex-col space-y-4">
+            {topics?.map((topic: any) => {
+              const isPremium = topic.accessType === 'paid';
+              const iconUrl = getTopicIconUrl('subject'); // Using default icon mapping
+              
+              return (
+                <button
+                  key={topic.id}
+                  onClick={() => navigate(`/practice/${topic.id}/questions`)}
+                  className="w-full bg-white rounded-[16px] shadow-[0_4px_10px_rgba(0,0,0,0.05)] p-3 flex items-center text-left active:scale-[0.98] transition-transform"
+                >
+                  <div className="w-[50px] h-[50px] bg-[#0D367A] rounded-[12px] flex items-center justify-center shrink-0">
+                    <img src={iconUrl} alt="Icon" className="w-[24px] h-[24px]" />
+                  </div>
+                  
+                  <div className="ml-4 flex-1 overflow-hidden pr-2">
+                    <h3 className="text-[16px] font-bold text-[#1F2937] truncate">
+                      {topic.name}
+                    </h3>
+                    <div className="flex items-center mt-1">
+                      <span className="text-[13px] font-medium text-[#6B7280] truncate max-w-[120px]">
+                        {topic.questionCount > 0 ? `${topic.questionCount} Questions` : 'Questions Available'}
+                      </span>
+                      <div className="w-2" />
+                      <div className={`px-2 py-[3px] rounded-full text-[10px] font-bold ${
+                        isPremium 
+                          ? 'bg-[#FACC15]/15 text-[#EAB308]' 
+                          : 'bg-[#22C55E]/10 text-[#22C55E]'
+                      }`}>
+                        {isPremium ? 'PREMIUM' : 'FREE'}
+                      </div>
+                    </div>
+                  </div>
+
+                  {isPremium && (
+                    <div className="shrink-0 mr-2">
+                      <Lock size={18} color="#9CA3AF" />
+                    </div>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

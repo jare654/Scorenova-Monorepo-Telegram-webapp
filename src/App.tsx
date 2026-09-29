@@ -75,7 +75,7 @@ export default function App() {
     return () => window.removeEventListener('auth:logout', handleLogout);
   }, []);
 
-  if (isLoading) {
+  if (false) {
     return <LoadingScreen />;
   }
 

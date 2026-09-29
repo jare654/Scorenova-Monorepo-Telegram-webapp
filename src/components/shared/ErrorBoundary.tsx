@@ -1,36 +1,39 @@
-import React from "react"
-import { Button } from "@/components/ui/button"
-import { AlertCircle } from "lucide-react"
+import React, { Component, ErrorInfo } from 'react';
 
-export class ErrorBoundary extends React.Component<
-  { children: React.ReactNode },
-  { hasError: boolean; error: Error | null }
-> {
-  constructor(props: { children: React.ReactNode }) {
-    super(props)
-    this.state = { hasError: false, error: null }
+interface Props {
+  children: React.ReactNode;
+}
+
+interface State {
+  hasError: boolean;
+  error: Error | null;
+}
+
+export class ErrorBoundary extends Component<Props, State> {
+  public state: State = {
+    hasError: false,
+    error: null,
+  };
+
+  public static getDerivedStateFromError(error: Error): State {
+    return { hasError: true, error };
   }
 
-  static getDerivedStateFromError(error: Error) {
-    return { hasError: true, error }
+  public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    console.error('Uncaught error:', error, errorInfo);
   }
 
-  render() {
+  public render() {
     if (this.state.hasError) {
       return (
-        <div className="flex h-screen w-full flex-col items-center justify-center bg-[#F8FAFC] p-4 text-center dark:bg-[#08101F]">
-          <div className="mb-6 rounded-full bg-[#D32F2F]/10 p-6 text-[#D32F2F]">
-            <AlertCircle size={48} />
-          </div>
-          <h2 className="mb-2 text-2xl font-bold text-slate-900 dark:text-white">Something went wrong</h2>
-          <p className="mb-8 text-slate-500 dark:text-slate-400">
-            {this.state.error?.message || "An unexpected error occurred."}
-          </p>
-          <Button onClick={() => window.location.reload()}>Reload Page</Button>
+        <div className="flex flex-col items-center justify-center h-screen bg-red-50 p-4 font-mono text-sm text-red-900 break-all overflow-auto">
+          <h1 className="text-xl font-bold mb-4">Something went wrong</h1>
+          <p className="mb-4">{this.state.error?.message}</p>
+          <pre className="bg-red-100 p-2 rounded">{this.state.error?.stack}</pre>
         </div>
-      )
+      );
     }
 
-    return this.props.children
+    return this.props.children;
   }
 }
